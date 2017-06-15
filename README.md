@@ -9,7 +9,7 @@ to appear on Current Biology.
 Yul HR Kang, Frederike H Petzschner, Daniel M Wolpert & Michael N Shadlen (c) 2017, unless otherwise noted.
 
 ## Instructions
-1. Download the code.
-2. Download the data from Columbia Academic Commons (link will become available shortly).
-3. Unzip the data into a folder named 'Data' under the code's folder.
-4. Run main.m in the root folder on MATLAB.
+1. Clone/download the repository.
+2. Extract Data.zip in the same folder as main.m
+3. Run main.m in its folder on MATLAB. 
+(Note: Running all analyses may take hours to days. Consider running each step separately using the cell mode.)
