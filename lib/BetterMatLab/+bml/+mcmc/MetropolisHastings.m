@@ -1,0 +1,2 @@
+classdef MetropolisHastings < MetropolisHastings
+end

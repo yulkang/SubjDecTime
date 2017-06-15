@@ -1,0 +1,1 @@
+plot(rand(1,100)); printLog testPrintLog/randPlot -depsc2

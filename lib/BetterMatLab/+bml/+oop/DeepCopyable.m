@@ -1,0 +1,2 @@
+classdef DeepCopyable < DeepCopyable
+end

@@ -1,0 +1,2 @@
+classdef FastShape < FastShape
+end

@@ -1,0 +1,33 @@
+function y = exphaz(t,L)
+%EXPHAZ Exponential hazard rate.
+%   Y = EXPHAZ(t,A,B) returns the hazard function of the Exponential distribution
+%   with shape parameter L, evaluated at the
+%   values in t.  
+%
+%   The size of Y is the common size of the input arguments.  A scalar input
+%   functions as a constant matrix of the same size as the other inputs.  Each
+%   element of Y contains the probability density evaluated at the
+%   corresponding elements of the inputs.
+%   
+%  Reference: Webb, W.M, O'Connor,A.N, Modarres, M, Mosleh, A , Probability Distribution Functions Used In Reliability
+%  Engineering, Reliability Information Analysis Center, New York, 2010
+%
+%   See also EXPPDF, EXPCDF, EXPFIT, EXPINV, EXPLIKE, EXPRND, EXPSTAT, PDF.
+%
+%   Author: Andrew O'Connor, occawen(AT)gmail.com
+
+if nargin<1
+    error('exphaz:TooFewInputs','Insufficient number of parameters.');
+end
+if nargin < 2
+    L = 1;
+end
+
+try
+y = ones(
+    
+catch
+    error('stats:gamhaz:InputSizeMismatch',...
+          'Non-scalar arguments must match in size.');
+end
+y(t < 0) = 0;

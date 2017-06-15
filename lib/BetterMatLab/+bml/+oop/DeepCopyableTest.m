@@ -1,0 +1,2 @@
+classdef DeepCopyableTest < DeepCopyableTest
+end

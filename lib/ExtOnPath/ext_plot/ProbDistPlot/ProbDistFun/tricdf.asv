@@ -1,0 +1,55 @@
+function y = tricdf(t,A,B,C)
+%TRICDF Triangle cumulative density function.
+%   Y = TRICDF(t,A,B,C) returns the CDF of the Triangle Distribution
+%   with lower bound A, upper bound B, and mode C, evaluated at the
+%   values in t.  
+%
+%   The size of Y is the common size of the input arguments.  A scalar input
+%   functions as a constant matrix of the same size as the other inputs.  Each
+%   element of Y contains the probability density evaluated at the
+%   corresponding elements of the inputs.
+%   
+%  Reference: Webb, W.M, O'Connor,A.N, Modarres, M, Mosleh, A , Probability Distribution Functions Used In Reliability
+%  Engineering, Reliability Information Analysis Center, New York, 2010
+%
+%   See also TRIPDF, TRIHAZ.
+%
+%   Author: Andrew O'Connor, AndrewNOConnor(AT)gmail.com
+
+if nargin<1
+    error('tricdf:TooFewInputs','Insufficient number of parameters.');
+end
+if nargin < 2
+    A = 0;
+end
+if nargin < 3
+    B = 1;
+end
+
+if nargin < 4
+    C = 0.5;
+end
+
+% Return NaN for out of range parameters.
+A(B <= A) = NaN;
+B(B <= A) = NaN;
+C(B <= A) = NaN;
+A(C < A) = NaN;
+B(C < A) = NaN;
+C(C < A) = NaN;
+A(C > B) = NaN;
+B(C > B) = NaN;
+C(C > B) = NaN;
+
+y = zeros(size(t));
+try
+
+    y(t<=C) = (t(t<=C)-A).^2./((B-A).*(C-A));
+    y(t>C) = 2.*(B-t(t>C))./((B-A).*(B-C));
+    y(t<A) = 0;
+    y(t>B) = 0;   
+
+catch
+    error('stats:tricdf:InputSizeMismatch',...
+          'Non-scalar arguments must match in size.');
+end

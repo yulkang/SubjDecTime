@@ -1,0 +1,7 @@
+function varargout = dep2zip(varargin)
+% DEP2ZIP Zips all files that depend on the .m file.
+%
+% [...] = dep2zip(m_file_name, ...)
+%
+% See also DEP2TXT
+[varargout{1:nargout}] = dep2zip(varargin{:});

@@ -1,0 +1,9 @@
+dat = rand(10,2);
+dat = [dat; -dat]; % So that we know the answer is [0 0].
+
+% Fit each dimension separately.
+[x, fval, exitflag, output, lambda, grad, hessian, history] = ...
+    fmincon_iter([1 0; 0 1], {}, {}, ...
+        @(x) sum(sum(bsxfun(@minus, dat, x).^2)), ...
+        [100 200])
+

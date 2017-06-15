@@ -1,0 +1,1 @@
+function y = foldSpline(a,b,c,d)

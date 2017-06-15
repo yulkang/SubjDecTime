@@ -1,0 +1,2 @@
+classdef DimInfo < DimInfo
+end

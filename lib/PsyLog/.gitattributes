@@ -1,0 +1,23 @@
+* text=auto !eol
+/mexTemplate.mexmaci64 -text
+test/matlab.mat -text
+test/testHandleSave.mat -text
+test/testHandleSave2.mat -text
+test/testHandleSave3.mat -text
+test/testHandleSave4_asStruct.mat -text
+test/testHandleSave5_recursiveSave.mat -text
+test/testRandStream1.mat -text
+test/testRandStream2.mat -text
+test/testSaveHandle.mat -text
+test/testSaveHandle2.mat -text
+test/testSave_1.mat -text
+test/testSave_2.mat -text
+test/testSave_20121108T065220.mat -text
+test/testSave_20121108T065240.mat -text
+test/testSave_3.mat -text
+test/testSave_4.mat -text
+wav/chimes.wav -text
+wav/click.WAV -text
+wav/ding.wav -text
+wav/secalert.wav -text
+wav/signon.wav -text

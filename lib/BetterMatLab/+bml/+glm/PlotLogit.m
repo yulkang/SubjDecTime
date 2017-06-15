@@ -1,0 +1,2 @@
+classdef PlotLogit < PlotLogit
+end

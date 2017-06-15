@@ -1,0 +1,2 @@
+classdef AxisTick < AxisTick
+end

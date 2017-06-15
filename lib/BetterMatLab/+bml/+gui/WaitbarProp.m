@@ -1,0 +1,2 @@
+classdef WaitbarProp < WaitbarProp
+end

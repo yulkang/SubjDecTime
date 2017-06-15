@@ -1,0 +1,2 @@
+classdef DimProp < DimProp
+end

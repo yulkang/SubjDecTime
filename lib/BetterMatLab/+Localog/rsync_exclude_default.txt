@@ -1,0 +1,8 @@
+.Spotlight*
+.Trash*
+.AppleDouble*
+Thumbs.db
+.DocumentRevisions*
+.DS_Store
+:2eDS_Store
+Data_reserved

@@ -1,0 +1,2 @@
+classdef test_Fit_module_cost < test_Fit_module_cost
+end

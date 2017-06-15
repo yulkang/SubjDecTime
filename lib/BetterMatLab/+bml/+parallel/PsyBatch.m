@@ -1,0 +1,2 @@
+classdef PsyBatch < PsyBatch
+end

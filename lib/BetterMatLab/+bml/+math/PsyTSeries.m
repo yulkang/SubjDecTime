@@ -1,0 +1,2 @@
+classdef PsyTSeries < PsyTSeries
+end

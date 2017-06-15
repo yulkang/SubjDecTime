@@ -1,0 +1,2 @@
+classdef PackageInheriter < PackageInheriter
+end

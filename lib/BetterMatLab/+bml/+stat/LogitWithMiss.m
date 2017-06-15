@@ -1,0 +1,2 @@
+classdef LogitWithMiss < LogitWithMiss
+end

@@ -1,0 +1,2 @@
+classdef Log < Log
+end

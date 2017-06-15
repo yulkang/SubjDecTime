@@ -1,0 +1,2 @@
+classdef IteratorInWorkspace < IteratorInWorkspace
+end
