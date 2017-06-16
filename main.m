@@ -4,10 +4,13 @@
 %   "Piercing of consciousness as a threshold crossing operation"
 %
 % Note: It may take hours to days to run all the analyses.
+%       Consider running each cell separately.
+%       "Analysis" should be run before generating Figures and Tables.
 
+%% Initializing path - Must be run before any other cell
 init_path;
 
-%% === Analysis (Should be done before generating Figures and Tables) ===
+%% === Analysis (Should be run before generating Figures and Tables) ===
 %% tSD fit with flat bound 
 W0 = Fit.Dtb.MeanRt.Main;
 W0.batch_VD_sdt_all;
