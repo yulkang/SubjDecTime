@@ -36,7 +36,9 @@ properties
     
     did_MC = []; % for file names.
     
-    skip_existing_fit = false; % true;
+    % skip_existing_fit
+    % : If true (default), delete existing fit file (.mat) to refit.
+    skip_existing_fit = true; % false;
 end
 properties (Dependent)
     to_import_k_class
@@ -2539,7 +2541,7 @@ methods
         %% Subject number
         for ii = 1:size(ax, 2)
             ax1 = ax(1,ii);
-            title(ax1, sprintf('S%d', ii));
+            title(ax1, sprintf('Subject %d', ii));
         end
         
         %% Place axes
