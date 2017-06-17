@@ -34,6 +34,10 @@ methods
         end
     end
     function batch(W0, varargin)
+        %% Fit DTB and plot
+        % Not reusing Fit.Dtb.Main.batch 
+        % because when to_keep_total_dur_same = true,
+        % incl_tRDK2Go_msec depends on incl_tRDKDur_msec.
         C2 = varargin2C2(varargin, {
             'subj', Data.Consts.subjs
             });
@@ -42,16 +46,21 @@ methods
         for ii = 1:n
             C = S2C(Ss(ii));
             W = feval(class(W0), C{:});
+            W0.W_now = W;
             
             W.main;
         end
         
+        %% Gather images
+        W0.imgather_ch_rt;
+        
+        %% Compare p_accu and tSD
+        W0.compare_p_accu_and_rt;
 %         W0.imgather_ch_rt;
     end
     function main(W0)
-%         W0.get_Ws_dtb;
-        W0.compare_p_accu_and_rt;
-%         W0.plot_and_save_all;
+        W0.get_Ws_dtb;
+        W0.plot_and_save_all;
 %         W0.compare_params;
     end
 end
@@ -96,7 +105,12 @@ methods
             W.Fl.res = L.res;
         else
             W.init;
-            L = packStruct(W);
+            W.main;
+%             W.init;
+%             W.fit;
+%             L = packStruct(W);
+            file = W.get_file;
+            L = load(file);
         end
     end
 end
@@ -296,16 +310,19 @@ end
 %% Plot comparing durations
 methods
     function plot_and_save_all(W0)
+        %%
         for kind = {'rt', 'ch'}
             %%
             clf;
-            W0.plot_sep(kind{1});
-            file = W0.get_file({'plt', kind{1}});
+            % n_se should be 1 since we are comparing two curves.
+            W0.plot_sep(kind{1}, 'plot_args', {'n_se', 1});
+            file = W0.get_file({'plt', kind{1}, 'nse', 1});
             savefigs(file);
         end
     end
     function plot_sep(W0, kind, varargin)
         S = varargin2S(varargin, {
+            'plot_args', {}
             'colors', {
                 'k'
                 bml.plot.color_lines('c')
@@ -327,7 +344,8 @@ methods
         
         for ii = 1:n_durs
             W = Ws{ii};
-            h = W.(['plot_' kind]);
+            W.pred_with_dense_cond;
+            h = W.(['plot_' kind])(S.plot_args{:});
             
             color = S.colors{ii};
             jitter = S.jitter{ii};
@@ -353,7 +371,7 @@ methods
         S_batch = varargin2S(batch_args, {
             'subj', Data.Consts.subjs
             'kind', {'rt', 'ch'}
-            'ylabel', {{'Subjective', 'Decision Time (s)'}, 'P_{right}'}
+            'ylabel', {{'Subjective', 'decision time (s)'}, 'P_{right}'}
             });
         n_subj = numel(S_batch.subj);
         n_kind = numel(S_batch.kind);
@@ -374,7 +392,7 @@ methods
                 
                 ax1 = subplotRC(n_kind, n_subj, i_kind, i_subj);
                 
-                file = W.get_file({'plt', kind});
+                file = W.get_file({'plt', kind, 'nse', 1});
                 ax1 = openfig_to_axes(file, ax1);
                 ax(i_kind, i_subj) = ax1;
             end
@@ -397,7 +415,7 @@ methods
                     xlabel(ax1, '');
                 else
                     if ~iscell(ax1.XLabel.String)
-                        ax1.XLabel.String = {' ', ax1.XLabel.String};
+                        ax1.XLabel.String = {' ', 'Motion strength (%)'}; % ax1.XLabel.String};
                     end
                 end
                 if col == 1
@@ -406,7 +424,7 @@ methods
                     ylabel(ax1, '');
                 end
                 if row == 1
-                    title(ax1, sprintf('S%d', col));
+                    title(ax1, sprintf('Subject %d', col));
                 else
                     title(ax1, '');
                 end
@@ -415,15 +433,16 @@ methods
                 end
             end
         end
-        
+                    
         %% Place axes
         bml.plot.position_subplots(ax, ...
             'btw_row', 0.05, ...
             'btw_col', 0.05, ...
             'margin_left', 0.1, ...
-            'margin_bottom', 0.17, ...
+            'margin_bottom', 0.2, ...
             'margin_right', 0.025, ...
             'margin_top', 0.07);
+        drawnow;
             
         %% Legend
         ax1 = ax(1,1);
@@ -438,6 +457,13 @@ methods
 %         set(h_legend, 'Position', [0.22, pos_legend(2), 0.005, pos_legend(4)]);
         
         %%
+        if exist('legend_h', 'var')
+            % For rapid iteration
+            try
+                delete(legend_h);
+            catch
+            end
+        end
         [legend_h, object_h] = legendflex(hline, {'0.2s', '0.8s'}, ...
             'xscale', 0.2, ...
             'buffer', [0.025, -0.073], ...
@@ -447,13 +473,12 @@ methods
 %             'title', 'Duration');
             
         %%
-        
         set(gcf, 'ResizeFcn', []);
         
-        legend_h.Position(1) = legend_h.Position(1) + 8;
-        legend_h.Position(2) = legend_h.Position(2) + 18;
-        legend_h.Position(3) = legend_h.Position(3) - 8;
-        legend_h.Position(4) = legend_h.Position(4) - 2;
+        legend_h.Position(1) = legend_h.Position(1) + 2;
+        legend_h.Position(2) = legend_h.Position(2) - 8;
+        legend_h.Position(3) = legend_h.Position(3) + 8;
+        legend_h.Position(4) = legend_h.Position(4) + 35;
 
 %         legend_h.Position(1) = legend_h.Position(1) - 2; % + 3;
 %         legend_h.Position(2) = legend_h.Position(2) + 5; % + 18;
@@ -462,31 +487,33 @@ methods
         
         %%
         hs = figure2struct(legend_h);
-        for ii = 1:numel(hs.text)
-            text1 = hs.text(ii);
-            text1.Position(2) = text1.Position(2) - 3;
+        for ii = 1:numel(hs.segment_horz)
+            seg1 = hs.segment_horz(ii);
+            seg1.YData = seg1.YData + 2;
         end
-        hs.text(1).Position(2) = hs.text(1).Position(2) - 3.5;
-        hs.text(2).Position(2) = hs.text(2).Position(2) + 0;
-        hs.text(3).Position(2) = hs.text(3).Position(2) + 0;
-        
-        hs.text(1).Position(1) = hs.text(1).Position(1) - 0.6;
+%         for ii = 1:numel(hs.text)
+%             text1 = hs.text(ii);
+%             text1.Position(2) = text1.Position(2) - 3;
+%         end
+%         hs.text(1).Position(2) = hs.text(1).Position(2) - 3.5;
+%         hs.text(2).Position(2) = hs.text(2).Position(2) + 0;
+%         hs.text(3).Position(2) = hs.text(3).Position(2) + 0;
 %         
-        %%
-        for ii = 1:numel(hs.line)
-            bml.plot.shift_line(hs.line, 0, -0.7);
-        end
+%         hs.text(1).Position(1) = hs.text(1).Position(1) - 0.6;
+%         
+%         %%
+%         for ii = 1:numel(hs.line)
+%             bml.plot.shift_line(hs.line, 0, -0.7);
+%         end
         
         %%
         file = W.get_file({'sbj', S_batch.subj, 'plt', S_batch.kind});
-        
-        C = {file, 'PaperPosition', [0, 0, 18.3, 3 * n_row + 1.5], ...
-            'ext', {'.fig', '.png', '.tif'}};
-        savefigs(C{:}, 'to_save', false); % resize only
-        
-        %%
-        
-        savefigs(C{:}, 'to_resize', false); % save only
+        savefigs(file, ...
+            'PaperPosition', ...
+                [0, 0, ...
+                Fit.Plot.Print.width_column2_cm, ...
+                3 * n_row + 1.5], ...
+            'ext', {'.fig', '.png', '.tif'});
     end
     function f_shift_legend(~, fun, legend_h, varargin)
         fun();
