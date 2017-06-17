@@ -84,6 +84,10 @@ W0.imgather_k_fixed_vs_free;
 W0 = Fit.Probe.Main;
 W0.imgather;
 
+%% Figure S1. Stats
+W0 = Fit.Probe.Main;
+W0.tabulate;
+
 %% Figure S2. Order preserving perturbations - takes a long time 
 W0 = Fit.PerturbPred.ShuffleDeltaSDT;
 W0.batch; % ('n_perm', 4); % To test, use small n_perm
@@ -113,6 +117,13 @@ W0.batch;
 W0 = Fit.Dtb.PermuteCoh.Summarize;
 W0.main_meanSDT_w_meanRT;
 W0.relabel_scatter;
+
+%% Figure S5. Correlation/Similarity between k_SDT and k_RT 
+Fit.Dtb.PermuteCoh.shuf_kappa;
+
+%% Figure S6. Comparison of accuracy & tSD between long vs short trials 
+W0 = Fit.CompDur.CompDur;
+W0.batch;
 
 %% === Tables ===
 %% Table 1. tSD fit with flat bound
@@ -151,10 +162,6 @@ W0 = Fit.RtVsSdt.RtVsSdt;
 W0.batch;
 
 %% Comparison of accuracy & tSD between long vs short trials 
-W0 = Fit.CompDur.CompDur;
-W0.main;
-
-%% Comparison of accuracy & tSD between long vs short trials 
 % while matching the total duration same
 % (dot 800 + delay 200 or dot 200 + delay 800)
 W0 = Fit.CompDur.CompDur;
@@ -169,15 +176,3 @@ W0.batch;
 %% # No-decision trials 
 W0 = Fit.NTrial.NTrialNoDecision;
 W0.batch;
-
-%% === Supp. Results ===
-%% Accuracy of the timing reports with the clock
-W0 = Fit.Probe.Main;
-W0.tabulate;
-
-%% Performance with and without tSD 
-W0 = Fit.CompAccu.CompAccu;
-W0.main;
-
-%% Correlation/Similarity between k_SDT and k_RT 
-Fit.Dtb.PermuteCoh.shuf_kappa;
