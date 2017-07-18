@@ -1,7 +1,8 @@
 %% Generate motion energy analysis Figure 5
 
 %panel a) includion window
-clear all
+% clear all
+clear
 
 clf
 set(0,'defaultlinelinewidth',1)
@@ -45,6 +46,12 @@ for p=1:length(delta) %loop ober inclusion window
     b_aft_se(p)=stats.se(3);
     b_bef_pval(p)=stats.p(2);
     b_aft_pval(p)=stats.p(3);
+    b_bef_df(p)=stats.dfe;
+    b_aft_df(p)=stats.dfe;
+    
+    % difference term
+    [~,~,stats_dif] = glmfit([me_bef - me_aft, me_bef + me_aft, coh], choice, 'binomial', 'link', 'logit');
+    p_dif(p) = stats_dif.p(2);
 end
 
 
@@ -80,9 +87,31 @@ legend(h,{'early motion energy (\beta_1)','late motion energy (\beta_2)'},'Locat
 set(gca,'Linewidth',2)
 
 shg
+
+%% p-value of the difference term
+p_dif1 = p_dif(2:12);
+disp('p_dif between 26ms to 160ms:');
+disp(p_dif1);
+disp('# p_dif < 0.05:');
+disp(sum(p_dif1 < 0.05));
+disp('# 0.05 <= p_dif < 0.1:');
+disp(sum((p_dif1 >= 0.05) & (p_dif1 < 0.1)));
+
+%% Z-test for difference
+z_dif = (b_bef - b_aft) ./ sqrt(b_bef_se .^2 + b_aft_se .^2);
+zcum = normcdf(z_dif);
+p = min(zcum, 1 - zcum) * 2;
+p1 = p(2:12); % 26ms to 160 ms
+disp('p-value of the difference (26-160 ms):');
+disp(p1);
+disp('# p < 0.05:');
+disp(sum(p1 < 0.05));
+disp('# 0.05 <= p < 0.1:');
+disp(sum((p1 >= 0.05) & (p1 < 0.1)));
+
 %% panle b) bootstrap
 
-clear all
+clear
 file = '../Data/Expr/sdt_motion_energy';
 load(file);
 
