@@ -8,8 +8,8 @@ set(0,'defaultlinelinewidth',1)
 set(groot, 'defaultAxesTickDir', 'out');
 set(groot,  'defaultAxesTickDirMode', 'manual');
 
-file = '../Data/Expr/sdt_motion_energy';
-load(file);
+
+load sdt_motion_energy
 
 %     X is a structure with data for the 800 ms (60 frame) trials 
 %     X.subj=subject number
@@ -83,10 +83,9 @@ shg
 %% panle b) bootstrap
 
 clear all
-file = '../Data/Expr/sdt_motion_energy';
-load(file);
+load sdt_motion_energy
 
-delta=10; %window size to include
+for delta=2:12 %window size to include
 r=round(75*(X.sdt-X.tnd)); %frame of t_theta=t_sd-t_tnd;
 
 %find trials that are inside window
@@ -112,7 +111,7 @@ nb=5000; % nuber of bootstaps
 boot_results=zeros(nb,4);
 
 for b=1:nb
-    if rem(b,100)==0,  b, end
+    %if rem(b,100)==0,  b, end
     
     boot_samples=exclusion(randi(length(exclusion),[ntrial 1]));
         
@@ -129,7 +128,8 @@ end
 
 b_bef=results(2)-results(1); % empirical difference
 b_aft=boot_results(:,2)-boot_results(:,1); % bootstrap differences
-fprintf('Bootstrap signicance for difference in early vs late motion p=%2.4f\n',mean(b_bef>b_aft))
+fprintf('Bootstrap signicance for difference in early vs late motion delta=%2.2f p=%2.4f\n',delta, mean(b_bef>b_aft))
+end
 
 % plot boostrap
 
