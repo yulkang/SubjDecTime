@@ -1,17 +1,12 @@
 COPYRIGHT
 
-BML TOOLBOX
+SubjDecTime
 
-All contributions by Yul Kang (unless otherwise noted):
-Copyright (c) 2011-2017, Yul Kang.
-yul dot kang dot on at gmail dot com.
+Yul HR Kang, Frederike H Petzschner, Daniel M Wolpert & Michael N Shadlen (c) 2017, unless otherwise noted.
 All rights reserved.
 
-All other contributions (noted in the file or the directory):
-Copyright (c) 2017, the respective contributors.
-All rights reserved.
-
-See https://github.com/yulkang/bml for the up-to-date version.
+For inquires regarding the code, contact yul dot kang dot on at gmail dot com,
+or use the Issues section of the GitHub page.
 
 
 MIT License
